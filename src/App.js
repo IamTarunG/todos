@@ -1,11 +1,19 @@
 import TodoItems from "./Components/TodoItems";
 import UserInput from "./Components/UserInput";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
+  function getData() {
+    const todolists = localStorage.getItem("todolists");
+    if (todolists !== null) {
+      return JSON.parse(todolists);
+    } else {
+      return [];
+    }
+  }
   const [text, setText] = useState("");
   const [desc, setDesc] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(getData());
   const newData = {
     id: new Date().getTime().toString(),
     title: text,
@@ -15,6 +23,7 @@ function App() {
     console.log("Clicked Add");
 
     setData([...data, newData]);
+
     setText("");
     setDesc("");
   }
@@ -25,10 +34,12 @@ function App() {
     });
     setData(updatedData);
   }
+  useEffect(() => {
+    localStorage.setItem("todolists", JSON.stringify(data));
+  }, [data]);
 
   return (
     <div className="App">
-      <TodoItems data={data} onDelete={onDelete} />
       <UserInput
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -36,6 +47,7 @@ function App() {
         descValue={desc}
         onAdd={addData}
       />
+      <TodoItems data={data} onDelete={onDelete} />
     </div>
   );
 }
