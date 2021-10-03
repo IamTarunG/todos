@@ -1,6 +1,9 @@
 import TodoItems from "./Components/TodoItems";
 import UserInput from "./Components/UserInput";
 import React, { useState, useEffect } from "react";
+import Navbar from "./Components/Navbar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import TableData from "./Components/TableData";
 
 function App() {
   function getData() {
@@ -39,16 +42,27 @@ function App() {
   }, [data]);
 
   return (
-    <div className="App">
-      <UserInput
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onDescChange={(e) => setDesc(e.target.value)}
-        descValue={desc}
-        onAdd={addData}
-      />
-      <TodoItems data={data} onDelete={onDelete} />
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar home="Home" table="Table" />
+        <Switch>
+          <Route exact path="/">
+            <UserInput
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onDescChange={(e) => setDesc(e.target.value)}
+              descValue={desc}
+              onAdd={addData}
+            />
+
+            <TodoItems data={data} onDelete={onDelete} />
+          </Route>
+          <Route exact path="/table">
+            <TableData />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
